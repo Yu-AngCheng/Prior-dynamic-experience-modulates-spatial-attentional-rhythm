@@ -8,10 +8,6 @@ N =64;
 f = (0:N/2)*fs/N;
 t = ((1:24)/fs)'+shift;
 
-% Amplitude_post_even = Amplitude_post_even ./ mean(Amplitude_post_even,1);
-% Amplitude_post_odd = Amplitude_post_odd ./ mean(Amplitude_post_odd,1);
-% Amplitude_pretest = Amplitude_pretest ./ mean(Amplitude_pretest,1);
-
 idx_odd = [1,2,5,8,11,13,16,19,21,23,25]; % odd
 idx_even = [3,4,6,7,9,10,12,14,15,17,18,20,22,24]; % even
 

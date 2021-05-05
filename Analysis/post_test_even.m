@@ -1,5 +1,5 @@
 %% 5Hz
-clearvars -except Amplitude_*
+clear
 load post_test_even.mat
 
 fs = 30;

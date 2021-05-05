@@ -1,4 +1,4 @@
-clearvars -except Amplitude_*
+clear
 load pretest.mat
 
 fs = 30;

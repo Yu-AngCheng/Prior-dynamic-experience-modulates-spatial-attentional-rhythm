@@ -1,6 +1,6 @@
 %% importdata data
 clear
-preorpost="pre";
+preorpost="post";
 if(preorpost=="pre")
     tall_pretest=[];
     width_pretest=[];

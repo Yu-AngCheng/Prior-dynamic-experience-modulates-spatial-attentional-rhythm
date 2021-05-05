@@ -20,10 +20,10 @@ f_5 = [10,11,12,13];
 
 Entrainment_post_even = sum(Amplitude_post_even(f_5,:),1);
 Entrainment_post_odd = sum(Amplitude_post_odd(f_3,:),1);
-Entrainmen_pre_even = sum(Amplitude_pretest(f_5,idx_even),1);
-Entrainmen_pre_odd = sum(Amplitude_pretest(f_3,idx_odd),1);
-Entrainmen_Index_even = Entrainment_post_even ./ Entrainmen_pre_even;
-Entrainmen_Index_odd = Entrainment_post_odd ./ Entrainmen_pre_odd;
+Entrainment_pre_even = sum(Amplitude_pretest(f_5,idx_even),1);
+Entrainment_pre_odd = sum(Amplitude_pretest(f_3,idx_odd),1);
+Entrainment_Index_even = Entrainment_post_even ./ Entrainment_pre_even;
+Entrainment_Index_odd = Entrainment_post_odd ./ Entrainment_pre_odd;
 
-[h_odd,p_odd] = ttest(Entrainmen_Index_odd,1,'Tail','Right');
-[h_even,p_even] = ttest(Entrainmen_Index_even,1,'Tail','Right');
+[h_odd,p_odd] = ttest(Entrainment_Index_odd,1,'Tail','Right');
+[h_even,p_even] = ttest(Entrainment_Index_even,1,'Tail','Right');

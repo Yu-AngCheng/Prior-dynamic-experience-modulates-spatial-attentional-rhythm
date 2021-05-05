@@ -11,10 +11,10 @@ t = ((1:24)/fs)'+shift;
 alpha = 0.05;
 
 for sub = 1:size(width_posttest, 3)
-    pretest_sub = squeeze(width_posttest(:,:,sub));
-    C_IC = pretest_sub(:,1) == pretest_sub(:,2);
-    time_interval = pretest_sub(:,3)*1/fs+shift;
-    RT = pretest_sub(:,4);
+    posttest_sub = squeeze(width_posttest(:,:,sub));
+    C_IC = posttest_sub(:,1) == posttest_sub(:,2);
+    time_interval = posttest_sub(:,3)*1/fs+shift;
+    RT = posttest_sub(:,4);
     [M_RT,G]=grpstats(RT,[C_IC,time_interval],{'nanmean','gname'});G=str2double(G);
     ACC_post_odd(:,sub) = M_RT(1:length(M_RT)/2) - M_RT(length(M_RT)/2+1:end);
     M_RT=smoothdata(M_RT,'gaussian',3);
@@ -29,10 +29,10 @@ Amplitude_mean_post_odd = mean(Amplitude_post_odd,2);
 runs = 1000;
 for shuffletime = 1:runs
     for sub = 1:size(width_posttest, 3)
-        pretest_sub = squeeze(width_posttest(:,:,sub));
-        C_IC = pretest_sub(:,1) == pretest_sub(:,2);
-        time_interval = pretest_sub(:,3)*1/fs+shift;
-        RT = pretest_sub(:,4);
+        posttest_sub = squeeze(width_posttest(:,:,sub));
+        C_IC = posttest_sub(:,1) == posttest_sub(:,2);
+        time_interval = posttest_sub(:,3)*1/fs+shift;
+        RT = posttest_sub(:,4);
         [M_RT,G]=grpstats(RT,[C_IC,time_interval],{'nanmean','gname'});G=str2double(G);
         M_RT=smoothdata(M_RT,'gaussian',3);
         C_IC_RT = M_RT(1:length(M_RT)/2) - M_RT(length(M_RT)/2+1:end);

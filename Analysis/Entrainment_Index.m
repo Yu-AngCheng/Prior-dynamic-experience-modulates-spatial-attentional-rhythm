@@ -23,3 +23,14 @@ Entrainment_Index_odd = Entrainment_post_odd ./ Entrainment_pre_odd;
 
 [h_odd,p_odd] = ttest(Entrainment_Index_odd,1,'Tail','Right');
 [h_even,p_even] = ttest(Entrainment_Index_even,1,'Tail','Right');
+[h,p] = ttest([Entrainment_Index_even,Entrainment_Index_odd],1,'Tail','Right');
+
+%%
+figure(2)
+histogram([Entrainment_Index_even,Entrainment_Index_odd],13);
+xline(1,'--r','LineWidth',1);
+xlabel('Entrainment Index');
+ylabel('Counts')
+box off;
+ylim([0,5]);
+xlim([0,4])

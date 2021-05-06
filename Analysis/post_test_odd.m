@@ -1,5 +1,5 @@
 %% 3 Hz
-clear
+clearvars -except Amplitude_*
 load post_test_odd.mat
 
 fs = 30;

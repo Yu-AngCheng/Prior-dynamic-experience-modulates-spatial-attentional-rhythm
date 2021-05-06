@@ -11,13 +11,16 @@ alpha = 0.05;
 
 for sub = 1:size(width_pretest, 3)
     pretest_sub = squeeze(width_pretest(:,:,sub));
+    idx1 = ~isnan(pretest_sub(:,4)) & (pretest_sub(:,4) == pretest_sub(:,2));
+    idx2 = ~isnan(pretest_sub(:,4)) & (pretest_sub(:,4) ~= pretest_sub(:,2));
+    pretest_sub(idx1,4) = 1; pretest_sub(idx2,4) = 0;
     C_IC = pretest_sub(:,1) == pretest_sub(:,2);
     time_interval = pretest_sub(:,3)*1/fs+shift;
     RT = pretest_sub(:,4);
     [M_RT,G]=grpstats(RT,[C_IC,time_interval],{'nanmean','gname'});G=str2double(G);
     ACC_pretest(:,sub) = M_RT(1:length(M_RT)/2) - M_RT(length(M_RT)/2+1:end);
-    M_RT=smoothdata(M_RT,'gaussian',3);
     C_IC_RT = M_RT(1:length(M_RT)/2) - M_RT(length(M_RT)/2+1:end);
+    C_IC_RT = smoothdata(C_IC_RT,'gaussian',4);
     Y = fft(detrend(C_IC_RT,1),N);
     P2 = abs(Y/N);
     P1 = P2(1:N/2+1);
@@ -33,8 +36,8 @@ for shuffletime = 1:runs
         time_interval = pretest_sub(:,3)*1/fs+shift;
         RT = pretest_sub(:,4);
         [M_RT,G]=grpstats(RT,[C_IC,time_interval],{'nanmean','gname'});G=str2double(G);
-        M_RT=smoothdata(M_RT,'gaussian',3);
         C_IC_RT = M_RT(1:length(M_RT)/2) - M_RT(length(M_RT)/2+1:end);
+        C_IC_RT = smoothdata(C_IC_RT,'gaussian',4);
         C_IC_RT = C_IC_RT(randperm(length(C_IC_RT)));
         Y = fft(detrend(C_IC_RT,1),N);
         P2 = abs(Y/N);

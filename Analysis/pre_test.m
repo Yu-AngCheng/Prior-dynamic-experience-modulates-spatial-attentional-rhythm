@@ -58,7 +58,7 @@ figure(1)
 subplot(3,2,1)
 shadedErrorBar(f',Amplitude_mean_pretest,nanstd(Amplitude_pretest,[],2)/sqrt(subs));
 hold on;
-plot(f,sig_pretest,'-r','LineWidth',2.5);
+plot(f,sig_pretest,'r*','LineWidth',1.5);
 hold on;
 plot(f,ones(size(f))*criterion,'--k','LineWidth',1);
 xlabel('Frequency (Hz)');

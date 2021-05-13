@@ -4,15 +4,15 @@ clear
 load Amplitude.mat
 fs = 30;
 shift = 0.2;
-N =64;
+N = 128;
 f = (0:N/2)*fs/N;
 t = ((1:24)/fs)'+shift;
 
 idx_odd = [1,2,5,8,11,13,16,19,21,23,25]; % odd
 idx_even = [3,4,6,7,9,10,12,14,15,17,18,20,22,24]; % even
 
-f_3 = [6, 7, 8, 9];
-f_5 = [10,11,12,13];
+f_3 = find(f>=2.75 & f<=3.25);
+f_5 = find(f>=4.75 & f<=5.25);
 
 Entrainment_post_even = sum(Amplitude_post_even(f_5,:),1);
 Entrainment_post_odd = sum(Amplitude_post_odd(f_3,:),1);

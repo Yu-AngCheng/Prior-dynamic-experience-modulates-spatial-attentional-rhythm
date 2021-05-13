@@ -3,12 +3,14 @@ clear
 load post_test_odd.mat
 
 fs = 30;
-N = 64;
+N = 128;
 subs = 11;
 shift = 0.2;
 f = (0:N/2)*fs/N;
 t = ((1:24)/fs)'+shift;
 alpha = 0.05;
+gaussianwindow = 3;
+
 
 for sub = 1:size(width_posttest, 3)
     posttest_sub = squeeze(width_posttest(:,:,sub));
@@ -21,7 +23,7 @@ for sub = 1:size(width_posttest, 3)
     [M_RT,G]=grpstats(RT,[C_IC,time_interval],{'nanmean','gname'});G=str2double(G);
     ACC_post_odd(:,sub) = M_RT(1:length(M_RT)/2) - M_RT(length(M_RT)/2+1:end);
     C_IC_RT = M_RT(1:length(M_RT)/2) - M_RT(length(M_RT)/2+1:end);
-    C_IC_RT = smoothdata(C_IC_RT,'gaussian',4);
+    C_IC_RT = smoothdata(C_IC_RT,'gaussian',gaussianwindow);
     Y = fft(detrend(C_IC_RT,1),N);
     P2 = abs(Y/N);
     P1 = P2(1:N/2+1);
@@ -54,19 +56,20 @@ h_post_odd = Amplitude_mean_post_odd > criterion;
 fprintf('Out of %d tests, %d is significant.\n',length(h_post_odd),sum(h_post_odd));
 %%
 sig_post_odd = NaN(size(h_post_odd));
-sig_post_odd(h_post_odd) = max(Amplitude_mean_post_odd).*1.25;
+sig_post_odd(h_post_odd) = max(Amplitude_mean_post_odd).*1.35;
 figure(1)
 subplot(3,2,5)
 shadedErrorBar(f',Amplitude_mean_post_odd,nanstd(Amplitude_post_odd,[],2)/sqrt(subs));
 hold on;
-plot(f,sig_post_odd,'r*','LineWidth',1.5);
+plot(f,sig_post_odd,'r-','LineWidth',2.5);
 hold on;
-plot(f,ones(size(f))*criterion,'--k','LineWidth',1);
+% plot(f,ones(size(f))*criterion,'--k','LineWidth',0.5);
 xlabel('Frequency (Hz)');
 ylabel('Amplitude (a.u.)')
-title('post test (3Hz prime)')
+title('3Hz prime')
 subplot(3,2,6)
 shadedErrorBar(t,mean(ACC_post_odd,2),nanstd(ACC_post_odd,[],2)/sqrt(subs));
+xlim([0.2,1.05])
 xlabel('Time (s)')
-ylabel('Accuracy')
-title('post test (3Hz prime)')
+ylabel('Accuracy (C-IC)')
+title('3Hz prime')

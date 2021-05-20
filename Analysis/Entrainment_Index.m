@@ -32,5 +32,3 @@ xline(1,'--r','LineWidth',1);
 xlabel('Entrainment Index');
 ylabel('Counts')
 box off;
-ylim([0,5]);
-xlim([0,4])

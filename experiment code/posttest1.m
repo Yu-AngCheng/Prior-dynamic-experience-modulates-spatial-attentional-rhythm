@@ -79,10 +79,10 @@ try
     timeout=0;
     Rdecrement=deg2pix(0.5,INCH,PWIDTH,VDIST);
     sf=deg2pix(1/1.4,INCH,PWIDTH,VDIST);
-    cd data;
-    load(strcat(SubjectInfo{1},'_threshold.mat'));
-    cd ..;
-    contrast=threshold;                                                             %到底调的是什么
+%     cd data;
+%     load(strcat(SubjectInfo{1},'_threshold.mat'));
+%     cd ..;
+    contrast=1;                                                             %到底调的是什么
     %%
     %正式trial
     focuspic=makefocus(Rfocus);

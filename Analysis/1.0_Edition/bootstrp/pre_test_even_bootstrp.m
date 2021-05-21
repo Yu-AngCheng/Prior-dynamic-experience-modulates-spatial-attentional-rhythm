@@ -14,14 +14,19 @@ idx_even = [3,4,6,7,9,10,12,14,15,17,18,20,22,24]; % even
 width_pretest = width_pretest(:,:,idx_even);
 %%
 tic
+for sub = 1:size(width_pretest, 3)
+    pretest_sub = squeeze(width_pretest(:,:,sub));
+    xx = pretest_sub(:,4) == 0;pretest_sub(xx,4) = 2;
+    
+    idx1 = ~isnan(pretest_sub(:,4)) & (pretest_sub(:,4) == pretest_sub(:,2));
+    idx2 = ~isnan(pretest_sub(:,4)) & (pretest_sub(:,4) ~= pretest_sub(:,2));
+    pretest_sub(idx1,4) = 1; pretest_sub(idx2,4) = 0;
+end
 for nboot = 1:1000
     idx = randsample(subs,subs,true);
     width_pretest_bootstrp = width_pretest(:,:,idx);
     for sub = 1:size(width_pretest, 3)      
         pretest_sub = squeeze(width_pretest_bootstrp(:,:,sub));
-        idx1 = ~isnan(pretest_sub(:,4)) & (pretest_sub(:,4) == pretest_sub(:,2));
-        idx2 = ~isnan(pretest_sub(:,4)) & (pretest_sub(:,4) ~= pretest_sub(:,2));
-        pretest_sub(idx1,4) = 1; pretest_sub(idx2,4) = 0;
         C_IC = pretest_sub(:,1) == pretest_sub(:,2);
         time_interval = pretest_sub(:,3)*1/fs+shift;
         RT = pretest_sub(:,4);

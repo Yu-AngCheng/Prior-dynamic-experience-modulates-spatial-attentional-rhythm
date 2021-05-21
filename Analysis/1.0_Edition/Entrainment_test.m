@@ -1,53 +1,53 @@
 %% Entrainment test
 clear
 load Amplitude.mat
-
+k = 6;
 idx_odd = [1,2,5,8,11,13,16,19,21,23,25]; % odd
 idx_even = [3,4,6,7,9,10,12,14,15,17,18,20,22,24]; % even
-[~,idx_temp] = max(Amplitude_post_even);
-f_peak_post_even = f(idx_temp);
-[~,idx_temp] = max(Amplitude_post_odd);
-f_peak_post_odd = f(idx_temp);
-[~,idx_temp] = max(Amplitude_pretest(:,idx_odd));
-f_peak_pre_odd = f(idx_temp);
-[~,idx_temp] = max(Amplitude_pretest(:,idx_even));
-f_peak_pre_even = f(idx_temp);
-[~,p1] = ttest(f_peak_pre_even,f_peak_post_even);
+[~,idx_temp] = maxk(Amplitude_post_even,k);
+f_peak_post_even = mean(f(idx_temp),1);
+[~,idx_temp] = maxk(Amplitude_post_odd,k);
+f_peak_post_odd = mean(f(idx_temp),1);
+[~,idx_temp] = maxk(Amplitude_pretest(:,idx_odd),k);
+f_peak_pre_odd = mean(f(idx_temp),1);
+[~,idx_temp] = maxk(Amplitude_pretest(:,idx_even),k);
+f_peak_pre_even = mean(f(idx_temp),1);
+[~,p1] = ttest(f_peak_pre_even,f_peak_post_even,'Tail','Left');
 [~,p2] = ttest(f_peak_pre_odd,f_peak_post_odd);
 [~,p3] = ttest2(f_peak_pre_even,f_peak_pre_odd);
-[~,p4] = ttest2(f_peak_post_even,f_peak_post_odd,'Tail','Right');
+[~,p4] = ttest2(f_peak_post_even,f_peak_post_odd);
 %%
 figure
 subplot(1,2,1);
-histogram(f_peak_pre_odd, 12,'Normalization','probability',...
+histogram(f_peak_pre_odd, 4,'Normalization','probability',...
     'EdgeColor','none','FaceColor',[0.9,0.1,0.1],'FaceAlpha',0.5);
 hold on
-histogram(f_peak_pre_even,12,'Normalization','probability',...
+histogram(f_peak_post_odd,4,'Normalization','probability',...
     'EdgeColor','none','FaceColor',[0.1,0.1,0.9],'FaceAlpha',0.5);
 box off;
 xlim([0,10])
 xticks(0:2:10)
 xlabel('Peak spatial attention frequency')
 ylabel('Normalized frenquency')
-legend({'3Hz prime group','5Hz prime group'})
+legend({'pre','post'})
 legend boxoff;
-title('before priming')
+title('3Hz prime group')
 subplot(1,2,2);
-histogram(f_peak_post_odd,12,'Normalization','probability',...
+histogram(f_peak_pre_even,4,'Normalization','probability',...
        'EdgeColor','none','FaceColor',[0.9,0.1,0.1],'FaceAlpha',0.5);
 hold on
-histogram(f_peak_post_even,12,'Normalization','probability',...
+histogram(f_peak_post_even,4,'Normalization','probability',...
     'EdgeColor','none','FaceColor',[0.1,0.1,0.9],'FaceAlpha',0.5);
 box off;
 xlabel('Peak spatial attention frequency')
 ylabel('Normalized frenquency')
 xlim([0,10])
 xticks(0:2:10)
-legend({'3Hz prime group','5Hz prime group'})
+legend({'pre','post'})
 legend boxoff;
-title('after priming')
+title('5Hz prime group')
 %%
-mean(f_peak_post_even)
-mean(f_peak_post_odd)
 mean(f_peak_pre_even)
+mean(f_peak_post_even)
 mean(f_peak_pre_odd)
+mean(f_peak_post_odd)

@@ -1,20 +1,10 @@
 %% Entrainment test
-
 clear
-load Amplitude.mat
-
-idx_odd = [1,2,5,8,11,13,16,19,21,23,25]; % odd
-idx_even = [3,4,6,7,9,10,12,14,15,17,18,20,22,24]; % even
-[~,idx_temp] = max(Amplitude_post_even);
-f_peak_post_even = f(idx_temp);
-[~,idx_temp] = max(Amplitude_post_odd);
-f_peak_post_odd = f(idx_temp);
-[~,idx_temp] = max(Amplitude_pretest(:,idx_odd));
-f_peak_pre_odd = f(idx_temp);
-[~,idx_temp] = max(Amplitude_pretest(:,idx_even));
-f_peak_pre_even = f(idx_temp);
-
-
+load f_peak_pretest.mat
+load f_peak_post_odd.mat
+load f_peak_post_even.mat
+load f_peak_pre_odd.mat
+load f_peak_pre_even.mat
 
 [~,p1] = ttest(f_peak_pre_even,f_peak_post_even);
 [~,p2] = ttest(f_peak_pre_odd,f_peak_post_odd);

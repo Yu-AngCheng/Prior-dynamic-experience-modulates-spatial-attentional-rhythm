@@ -1,4 +1,4 @@
-clearvars -except ACC
+clear
 
 load pretest.mat
 fs = 30;
@@ -50,6 +50,7 @@ AC = tall_posttest(:,4);
 [M_RT,G]=grpstats(AC,[C_IC],{'nanmean','gname'});G=str2double(G);
 ACC(:,3) = M_RT;
 %%
+figure
 bar1 = bar(ACC,'EdgeColor','none');
 set(bar1(1),...
     'FaceColor',[0.501960813999176 0.501960813999176 0.501960813999176]);
@@ -60,7 +61,7 @@ set(bar1(3),...
 ylim([0,1]);
 box off;
 xticks([1,2]);
-xticklabels({'Congruent Trials','Incongruent Trials'})
+xticklabels({'Incongruent Trials','Congruent Trials'})
 ylabel('Accuracy')
 legend({'baseline','3Hz prime','5Hz prime'});
 legend boxoff;

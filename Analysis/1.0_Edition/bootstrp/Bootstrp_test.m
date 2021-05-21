@@ -6,10 +6,6 @@ load f_peak_post_even.mat
 load f_peak_pre_odd.mat
 load f_peak_pre_even.mat
 
-[~,p1] = ttest(f_peak_pre_even,f_peak_post_even);
-[~,p2] = ttest(f_peak_pre_odd,f_peak_post_odd);
-[~,p3] = ttest2(f_peak_pre_even,f_peak_pre_odd);
-[~,p4] = ttest2(f_peak_post_even,f_peak_post_odd);
 %%
 figure
 subplot(1,2,1);

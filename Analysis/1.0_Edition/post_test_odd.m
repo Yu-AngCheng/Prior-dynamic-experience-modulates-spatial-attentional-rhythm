@@ -8,45 +8,56 @@ subs = 11;
 shift = 0.2;
 f = (0:N/2)*fs/N;
 t = ((1:24)/fs)'+shift;
-alpha = 0.05;
+alpha = 0.01;
 gaussianwindow = 3;
 
 
 for sub = 1:size(width_posttest, 3)
     posttest_sub = squeeze(width_posttest(:,:,sub));
+    xx = posttest_sub(:,4) == 0;posttest_sub(xx,4) = 2;
+
     idx1 = ~isnan(posttest_sub(:,4)) & (posttest_sub(:,4) == posttest_sub(:,2));
     idx2 = ~isnan(posttest_sub(:,4)) & (posttest_sub(:,4) ~= posttest_sub(:,2));
     posttest_sub(idx1,4) = 1; posttest_sub(idx2,4) = 0;
+    
     C_IC = posttest_sub(:,1) == posttest_sub(:,2);
     time_interval = posttest_sub(:,3)*1/fs+shift;
     RT = posttest_sub(:,4);
+    
     [M_RT,G]=grpstats(RT,[C_IC,time_interval],{'nanmean','gname'});G=str2double(G);
     ACC_post_odd(:,sub) = M_RT(1:length(M_RT)/2) - M_RT(length(M_RT)/2+1:end);
     C_IC_RT = M_RT(1:length(M_RT)/2) - M_RT(length(M_RT)/2+1:end);
     C_IC_RT = smoothdata(C_IC_RT,'gaussian',gaussianwindow);
+    
     Y = fft(detrend(C_IC_RT,1),N);
     P2 = abs(Y/N);
     P1 = P2(1:N/2+1);
     P1(2:end-1) = 2*P1(2:end-1);
     Amplitude_post_odd(:,sub) = P1;
 end
+
 Amplitude_mean_post_odd = mean(Amplitude_post_odd,2);
+
 runs = 1000;
 for shuffletime = 1:runs
     for sub = 1:size(width_posttest, 3)
         posttest_sub = squeeze(width_posttest(:,:,sub));
+        
         C_IC = posttest_sub(:,1) == posttest_sub(:,2);
         time_interval = posttest_sub(:,3)*1/fs+shift;
         RT = posttest_sub(:,4);
+        
         [M_RT,G]=grpstats(RT,[C_IC,time_interval],{'nanmean','gname'});G=str2double(G);
         C_IC_RT = M_RT(1:length(M_RT)/2) - M_RT(length(M_RT)/2+1:end);
-        C_IC_RT = smoothdata(C_IC_RT,'gaussian',4);
+        C_IC_RT = smoothdata(C_IC_RT,'gaussian',gaussianwindow);
         C_IC_RT = C_IC_RT(randperm(length(C_IC_RT)));
+        
         Y = fft(detrend(C_IC_RT,1),N);
         P2 = abs(Y/N);
         P1 = P2(1:N/2+1);
         P1(2:end-1) = 2*P1(2:end-1);
         Amplitude_shuffle(:,sub,shuffletime) = P1;
+        
     end
 end
 Amplitude_shuffle_mean = squeeze(mean(Amplitude_shuffle,2));
@@ -66,10 +77,12 @@ hold on;
 % plot(f,ones(size(f))*criterion,'--k','LineWidth',0.5);
 xlabel('Frequency (Hz)');
 ylabel('Amplitude (a.u.)')
-title('3Hz prime')
+title('3Hz prime group')
 subplot(3,2,6)
 shadedErrorBar(t,mean(ACC_post_odd,2),nanstd(ACC_post_odd,[],2)/sqrt(subs));
 xlim([0.2,1.05])
 xlabel('Time (s)')
 ylabel('Accuracy (C-IC)')
-title('3Hz prime')
+title('3Hz prime group')
+%%
+save Amplitude.mat Amplitude_post_odd -append

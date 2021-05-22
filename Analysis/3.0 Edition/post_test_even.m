@@ -67,12 +67,12 @@ hold on;
 % plot(f,ones(size(f))*criterion,'--k','LineWidth',0.5);
 xlabel('Frequency (Hz)');
 ylabel('PSD (a.u.)')
-title('5Hz prime')
+title('5Hz prime group')
 subplot(3,2,4)
 shadedErrorBar(t,mean(ACC_post_even,2),nanstd(ACC_post_even,[],2)/sqrt(subs));
 xlim([0.2,1.05])
 xlabel('Time (s)')
 ylabel('Accuracy (C-IC)')
-title('5Hz prime')
+title('5Hz prime group')
 %%
 save PSD.mat PSD_post_even -append;

@@ -59,7 +59,7 @@ fprintf('Out of %d tests, %d is significant.\n',length(h_pretest),sum(h_pretest)
 sig_pretest = NaN(size(h_pretest));
 sig_pretest(h_pretest) = max(PSD_mean_pretest_odd).*1.5;
 figure(2)
-subplot(3,2,5)
+subplot(2,2,3)
 shadedErrorBar(f',PSD_mean_pretest_odd,nanstd(PSD_pretest_odd,[],2)/sqrt(subs));
 hold on;
 plot(f,sig_pretest,'r-','LineWidth',2.5);
@@ -68,7 +68,7 @@ hold on;
 xlabel('Frequency (Hz)');
 ylabel('PSD (a.u.)')
 title('3Hz prime group baseline')
-subplot(3,2,6)
+subplot(2,2,4)
 shadedErrorBar(t,mean(ACC_pretest_odd,2),nanstd(ACC_pretest_odd,[],2)/sqrt(subs));
 xlim([0.2,1.05])
 xlabel('Time (s)')

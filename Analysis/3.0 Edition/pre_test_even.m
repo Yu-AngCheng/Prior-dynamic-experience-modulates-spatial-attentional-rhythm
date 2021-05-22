@@ -59,7 +59,7 @@ fprintf('Out of %d tests, %d is significant.\n',length(h_pretest),sum(h_pretest)
 sig_pretest = NaN(size(h_pretest));
 sig_pretest(h_pretest) = max(PSD_mean_pretest_even).*1.5;
 figure(2)
-subplot(3,2,3)
+subplot(2,2,1)
 shadedErrorBar(f',PSD_mean_pretest_even,nanstd(PSD_pretest_even,[],2)/sqrt(subs));
 hold on;
 plot(f,sig_pretest,'r-','LineWidth',2.5);
@@ -68,11 +68,11 @@ hold on;
 xlabel('Frequency (Hz)');
 ylabel('PSD (a.u.)')
 title('5Hz prime group baseline')
-subplot(3,2,4)
+subplot(2,2,2)
 shadedErrorBar(t,mean(ACC_pretest_even,2),nanstd(ACC_pretest_even,[],2)/sqrt(subs));
 xlim([0.2,1.05])
 xlabel('Time (s)')
 ylabel('Accuracy (C-IC)')
 title('5Hz prime group baseline')
 %%
-% save PSD.mat PSD_pretest_even -append;
+save PSD.mat PSD_pretest_even -append;

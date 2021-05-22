@@ -1,0 +1,78 @@
+clear
+load pretest.mat
+idx_odd = [1,2,5,8,11,13,16,19,21,23,25]; % odd
+width_pretest = width_pretest(:,:,idx_odd);
+
+fs = 30;
+N = 64;
+subs = 11;
+shift = 0.2;
+f = (0:N/2)*fs/N;
+t = ((1:24)/fs)'+shift;
+alpha = 0.05;
+gaussianwindow = 3;
+detrendnumber = 3;
+
+for sub = 1:size(width_pretest, 3)
+    pretest_odd_sub = squeeze(width_pretest(:,:,sub));
+    xx = pretest_odd_sub(:,4) == 0;pretest_odd_sub(xx,4) = 2;
+    
+    idx1 = ~isnan(pretest_odd_sub(:,4)) & (pretest_odd_sub(:,4) == pretest_odd_sub(:,2));
+    idx2 = ~isnan(pretest_odd_sub(:,4)) & (pretest_odd_sub(:,4) ~= pretest_odd_sub(:,2));
+    width_pretest(idx1,4,sub) = 1; width_pretest(idx2,4,sub) = 0;
+end
+
+for sub = 1:size(width_pretest, 3)
+    pretest_odd_sub = squeeze(width_pretest(:,:,sub));
+    
+    C_IC = pretest_odd_sub(:,1) == pretest_odd_sub(:,2);
+    time_interval = pretest_odd_sub(:,3)*1/fs+shift;
+    RT = pretest_odd_sub(:,4);
+    [M_RT,G]=grpstats(RT,[C_IC,time_interval],{'nanmean','gname'});G=str2double(G);
+    ACC_pretest_odd(:,sub) = M_RT(1:length(M_RT)/2) - M_RT(length(M_RT)/2+1:end);
+    C_IC_RT = M_RT(1:length(M_RT)/2) - M_RT(length(M_RT)/2+1:end);
+    C_IC_RT = smoothdata(C_IC_RT,'gaussian',gaussianwindow);
+    PSD_pretest_odd(:,sub) = periodogram(detrend(C_IC_RT,detrendnumber),[],N,fs);
+end
+PSD_mean_pretest_odd = mean(PSD_pretest_odd,2);
+runs = 1000;
+for shuffletime = 1:runs
+    for sub = 1:size(width_pretest, 3)
+        pretest_odd_sub = squeeze(width_pretest(:,:,sub));
+        
+        C_IC = pretest_odd_sub(:,1) == pretest_odd_sub(:,2);
+        time_interval = pretest_odd_sub(:,3)*1/fs+shift;
+        RT = pretest_odd_sub(:,4);
+        [M_RT,G]=grpstats(RT,[C_IC,time_interval],{'nanmean','gname'});G=str2double(G);
+        C_IC_RT = M_RT(1:length(M_RT)/2) - M_RT(length(M_RT)/2+1:end);
+        C_IC_RT = smoothdata(C_IC_RT,'gaussian',gaussianwindow);
+        C_IC_RT = C_IC_RT(randperm(length(C_IC_RT)));
+        PSD_shuffle(:,sub,shuffletime) = periodogram(detrend(C_IC_RT,detrendnumber),[],N,fs);
+    end
+end
+PSD_shuffle_mean = squeeze(mean(PSD_shuffle,2));
+PSD_shuffle_mean = sort(PSD_shuffle_mean,2);
+criterion = max(PSD_shuffle_mean(:,round(runs*(1-alpha))));
+h_pretest = PSD_mean_pretest_odd > criterion;
+fprintf('Out of %d tests, %d is significant.\n',length(h_pretest),sum(h_pretest));
+%%
+sig_pretest = NaN(size(h_pretest));
+sig_pretest(h_pretest) = max(PSD_mean_pretest_odd).*1.5;
+figure(2)
+subplot(3,2,5)
+shadedErrorBar(f',PSD_mean_pretest_odd,nanstd(PSD_pretest_odd,[],2)/sqrt(subs));
+hold on;
+plot(f,sig_pretest,'r-','LineWidth',2.5);
+hold on;
+% plot(f,ones(size(f))*criterion,'--k','LineWidth',0.5);
+xlabel('Frequency (Hz)');
+ylabel('PSD (a.u.)')
+title('3Hz prime group baseline')
+subplot(3,2,6)
+shadedErrorBar(t,mean(ACC_pretest_odd,2),nanstd(ACC_pretest_odd,[],2)/sqrt(subs));
+xlim([0.2,1.05])
+xlabel('Time (s)')
+ylabel('Accuracy (C-IC)')
+title('3Hz prime group baseline')
+%%
+save PSD.mat PSD_pretest_odd -append;

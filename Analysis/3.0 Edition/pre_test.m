@@ -9,12 +9,20 @@ f = (0:N/2)*fs/N;
 t = ((1:24)/fs)'+shift;
 alpha = 0.05;
 gaussianwindow = 3;
+detrendnumber = 3;
 
 for sub = 1:size(width_pretest, 3)
     pretest_sub = squeeze(width_pretest(:,:,sub));
+    xx = pretest_sub(:,4) == 0;pretest_sub(xx,4) = 2;
+    
     idx1 = ~isnan(pretest_sub(:,4)) & (pretest_sub(:,4) == pretest_sub(:,2));
     idx2 = ~isnan(pretest_sub(:,4)) & (pretest_sub(:,4) ~= pretest_sub(:,2));
-    pretest_sub(idx1,4) = 1; pretest_sub(idx2,4) = 0;
+    width_pretest(idx1,4,sub) = 1; width_pretest(idx2,4,sub) = 0;
+end
+
+for sub = 1:size(width_pretest, 3)
+    pretest_sub = squeeze(width_pretest(:,:,sub));
+    
     C_IC = pretest_sub(:,1) == pretest_sub(:,2);
     time_interval = pretest_sub(:,3)*1/fs+shift;
     RT = pretest_sub(:,4);
@@ -22,21 +30,22 @@ for sub = 1:size(width_pretest, 3)
     ACC_pretest(:,sub) = M_RT(1:length(M_RT)/2) - M_RT(length(M_RT)/2+1:end);
     C_IC_RT = M_RT(1:length(M_RT)/2) - M_RT(length(M_RT)/2+1:end);
     C_IC_RT = smoothdata(C_IC_RT,'gaussian',gaussianwindow);
-    PSD_pretest(:,sub) = periodogram(detrend(C_IC_RT,1),[],N,fs);
+    PSD_pretest(:,sub) = periodogram(detrend(C_IC_RT,detrendnumber),[],N,fs);
 end
 PSD_mean_pretest = mean(PSD_pretest,2);
 runs = 1000;
 for shuffletime = 1:runs
     for sub = 1:size(width_pretest, 3)
         pretest_sub = squeeze(width_pretest(:,:,sub));
+        
         C_IC = pretest_sub(:,1) == pretest_sub(:,2);
         time_interval = pretest_sub(:,3)*1/fs+shift;
         RT = pretest_sub(:,4);
         [M_RT,G]=grpstats(RT,[C_IC,time_interval],{'nanmean','gname'});G=str2double(G);
         C_IC_RT = M_RT(1:length(M_RT)/2) - M_RT(length(M_RT)/2+1:end);
-        C_IC_RT = smoothdata(C_IC_RT,'gaussian',4);
+        C_IC_RT = smoothdata(C_IC_RT,'gaussian',gaussianwindow);
         C_IC_RT = C_IC_RT(randperm(length(C_IC_RT)));
-        PSD_shuffle(:,sub,shuffletime) = periodogram(detrend(C_IC_RT,1),[],N,fs);
+        PSD_shuffle(:,sub,shuffletime) = periodogram(detrend(C_IC_RT,detrendnumber),[],N,fs);
     end
 end
 PSD_shuffle_mean = squeeze(mean(PSD_shuffle,2));
@@ -63,3 +72,5 @@ xlim([0.2,1.05])
 xlabel('Time (s)')
 ylabel('Accuracy (C-IC)')
 title('baseline')
+%%
+% save PSD.mat PSD_pretest f;

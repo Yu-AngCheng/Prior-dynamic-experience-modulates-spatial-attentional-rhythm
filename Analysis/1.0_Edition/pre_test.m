@@ -8,7 +8,7 @@ subs = 25;
 shift = 0.2;
 f = (0:N/2)*fs/N;
 t = ((1:24)/fs)'+shift;
-alpha = 0.01;
+alpha = 0.05;
 gaussianwindow = 3;
 
 for sub = 1:size(width_pretest, 3)
@@ -17,7 +17,7 @@ for sub = 1:size(width_pretest, 3)
     
     idx1 = ~isnan(pretest_sub(:,4)) & (pretest_sub(:,4) == pretest_sub(:,2));
     idx2 = ~isnan(pretest_sub(:,4)) & (pretest_sub(:,4) ~= pretest_sub(:,2));
-    pretest_sub(idx1,4) = 1; pretest_sub(idx2,4) = 0;
+    width_pretest(idx1,4,sub) = 1; width_pretest(idx2,4,sub) = 0;
 end
 
 for sub = 1:size(width_pretest, 3)
@@ -32,7 +32,7 @@ for sub = 1:size(width_pretest, 3)
     C_IC_RT = M_RT(1:length(M_RT)/2) - M_RT(length(M_RT)/2+1:end);
     C_IC_RT = smoothdata(C_IC_RT,'gaussian',gaussianwindow);
     
-    Y = fft(detrend(C_IC_RT,1),N);
+    Y = fft(detrend(C_IC_RT,2),N);
     P2 = abs(Y/N);
     P1 = P2(1:N/2+1);
     P1(2:end-1) = 2*P1(2:end-1);
@@ -56,7 +56,7 @@ for shuffletime = 1:runs
         C_IC_RT = smoothdata(C_IC_RT,'gaussian',gaussianwindow);
         C_IC_RT = C_IC_RT(randperm(length(C_IC_RT)));
         
-        Y = fft(detrend(C_IC_RT,1),N);
+        Y = fft(detrend(C_IC_RT,2),N);
         P2 = abs(Y/N);
         P1 = P2(1:N/2+1);
         P1(2:end-1) = 2*P1(2:end-1);
@@ -85,7 +85,7 @@ xlabel('Frequency (Hz)');
 ylabel('Amplitude (a.u.)')
 title('baseline')
 subplot(3,2,2)
-shadedErrorBar(t,mean(ACC_pretest,2),nanstd(ACC_pretest,[],2)/sqrt(subs));
+shadedErrorBar(t,-mean(ACC_pretest,2),nanstd(ACC_pretest,[],2)/sqrt(subs));
 xlim([0.2,1.05])
 xlabel('Time (s)')
 ylabel('Accuracy (C-IC)')

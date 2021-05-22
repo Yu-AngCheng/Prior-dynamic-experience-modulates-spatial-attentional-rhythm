@@ -21,7 +21,7 @@ for sub = 1:size(width_pretest, 3)
     
     idx1 = ~isnan(pretest_sub(:,4)) & (pretest_sub(:,4) == pretest_sub(:,2));
     idx2 = ~isnan(pretest_sub(:,4)) & (pretest_sub(:,4) ~= pretest_sub(:,2));
-    pretest_sub(idx1,4) = 1; pretest_sub(idx2,4) = 0;
+    width_pretest(idx1,4,sub) = 1; width_pretest(idx2,4,sub) = 0;
 end
 for sub = 1:size(width_posttest, 3)
     posttest_sub = squeeze(width_posttest(:,:,sub));
@@ -29,7 +29,7 @@ for sub = 1:size(width_posttest, 3)
     
     idx1 = ~isnan(posttest_sub(:,4)) & (posttest_sub(:,4) == posttest_sub(:,2));
     idx2 = ~isnan(posttest_sub(:,4)) & (posttest_sub(:,4) ~= posttest_sub(:,2));
-    posttest_sub(idx1,4) = 1; posttest_sub(idx2,4) = 0;
+    width_posttest(idx1,4,sub) = 1; width_posttest(idx2,4,sub) = 0;
 end
 for nboot = 1:1000
     idx = randsample(subs,subs,true);
@@ -68,7 +68,7 @@ end
 toc
 %%
 load Amplitude.mat
-k = 
+k = 12
 [~,idx_f] = maxk(Amplitude_mean_pretest,k);
 f_peak_pre_even = f(idx_f);
 [~,idx_f] = maxk(Amplitude_mean_posttest,k);

@@ -1,17 +1,22 @@
 %% Entrainment test
 clear
 load PSD.mat
-
+k = 1;
 idx_odd = [1,2,5,8,11,13,16,19,21,23,25]; % odd
 idx_even = [3,4,6,7,9,10,12,14,15,17,18,20,22,24]; % even
-[~,idx_temp] = max(PSD_post_even);
-f_peak_post_even = f(idx_temp);
-[~,idx_temp] = max(PSD_post_odd);
-f_peak_post_odd = f(idx_temp);
-[~,idx_temp] = max(PSD_pretest(:,idx_odd));
-f_peak_pre_odd = f(idx_temp);
-[~,idx_temp] = max(PSD_pretest(:,idx_even));
-f_peak_pre_even = f(idx_temp);
+[~,idx_temp] = maxk(PSD_post_even,k);
+f_peak_post_even = mean(f(idx_temp),1);
+[~,idx_temp] = maxk(PSD_post_odd,k);
+f_peak_post_odd = mean(f(idx_temp),1);
+[~,idx_temp] = maxk(PSD_pretest(:,idx_odd),k);
+f_peak_pre_odd = mean(f(idx_temp),1);
+[~,idx_temp] = maxk(PSD_pretest(:,idx_even),k);
+f_peak_pre_even = mean(f(idx_temp),1);
+
+mean(f_peak_post_even)
+mean(f_peak_post_odd)
+mean(f_peak_pre_even)
+mean(f_peak_pre_odd)
 [~,p1] = ttest(f_peak_pre_even,f_peak_post_even);
 [~,p2] = ttest(f_peak_pre_odd,f_peak_post_odd);
 [~,p3] = ttest2(f_peak_pre_even,f_peak_pre_odd);
@@ -47,7 +52,3 @@ legend({'3Hz prime','5Hz prime'})
 legend boxoff;
 title('after priming')
 %%
-mean(f_peak_post_even)
-mean(f_peak_post_odd)
-mean(f_peak_pre_even)
-mean(f_peak_pre_odd)

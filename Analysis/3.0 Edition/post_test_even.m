@@ -75,4 +75,4 @@ xlabel('Time (s)')
 ylabel('Accuracy (C-IC)')
 title('5Hz prime')
 %%
-% save PSD.mat PSD_post_even -append;
+save PSD.mat PSD_post_even -append;

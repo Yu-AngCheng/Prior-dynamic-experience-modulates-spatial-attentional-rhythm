@@ -74,4 +74,4 @@ xlabel('Time (s)')
 ylabel('Accuracy (C-IC)')
 title('3Hz prime')
 %%
-% save PSD.mat PSD_post_odd -append;
+save PSD.mat PSD_post_odd -append;

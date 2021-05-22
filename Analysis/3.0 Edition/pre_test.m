@@ -62,7 +62,7 @@ shadedErrorBar(f',PSD_mean_pretest,nanstd(PSD_pretest,[],2)/sqrt(subs));
 hold on;
 plot(f,sig_pretest,'r-','LineWidth',2.5);
 hold on;
-% plot(f,ones(size(f))*criterion,'--k','LineWidth',0.5);
+plot(f,ones(size(f))*criterion,'--k','LineWidth',0.5);
 xlabel('Frequency (Hz)');
 ylabel('PSD (a.u.)')
 title('baseline')

@@ -1,4 +1,4 @@
-%% odd(3Hz) based on jackknife
+%% odd (3Hz) based on jackknife
 clear
 load pretest.mat
 load post_test_odd.mat
@@ -16,11 +16,11 @@ gaussianwindow = 3;
 detrendnumber = 3;
 
 for sub = 1:size(width_pretest, 3)
-    pretest_sub = squeeze(width_pretest(:,:,sub));
-    xx = pretest_sub(:,4) == 0;pretest_sub(xx,4) = 2;
+    pretest_odd_sub = squeeze(width_pretest(:,:,sub));
+    xx = pretest_odd_sub(:,4) == 0;pretest_odd_sub(xx,4) = 2;
     
-    idx1 = ~isnan(pretest_sub(:,4)) & (pretest_sub(:,4) == pretest_sub(:,2));
-    idx2 = ~isnan(pretest_sub(:,4)) & (pretest_sub(:,4) ~= pretest_sub(:,2));
+    idx1 = ~isnan(pretest_odd_sub(:,4)) & (pretest_odd_sub(:,4) == pretest_odd_sub(:,2));
+    idx2 = ~isnan(pretest_odd_sub(:,4)) & (pretest_odd_sub(:,4) ~= pretest_odd_sub(:,2));
     width_pretest(idx1,4,sub) = 1; width_pretest(idx2,4,sub) = 0;
 end
 for sub = 1:size(width_posttest, 3)
@@ -63,8 +63,8 @@ for j = 1 :subs
     [~,idx_pre_odd] = max(nanmean(PSD_pretest_odd,2));
     [~,idx_post_odd] = max(nanmean(PSD_posttest_odd,2));
     f_pre_odd = f(idx_pre_odd);
-    f_post_ = f(idx_post_odd);
-    f_diff(j) = f_post_even - f_pre_odd;
+    f_post_odd = f(idx_post_odd);
+    f_diff(j) = f_post_odd - f_pre_odd;
 end
 SE_jack = sqrt(sum((f_diff(j)-mean(f_diff)).^2)/length(f_diff)*(length(f_diff)-1));
 T = mean(f_diff(j))/SE_jack;

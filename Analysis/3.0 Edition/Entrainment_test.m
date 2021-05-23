@@ -1,16 +1,16 @@
 %% Entrainment test
 clear
 load PSD.mat
-k = 1;
+k = 6;
 idx_odd = [1,2,5,8,11,13,16,19,21,23,25]; % odd
 idx_even = [3,4,6,7,9,10,12,14,15,17,18,20,22,24]; % even
 [~,idx_temp] = maxk(PSD_post_even,k);
 f_peak_post_even = mean(f(idx_temp),1);
 [~,idx_temp] = maxk(PSD_post_odd,k);
 f_peak_post_odd = mean(f(idx_temp),1);
-[~,idx_temp] = maxk(PSD_pretest(:,idx_odd),k);
+[~,idx_temp] = maxk(PSD_pretest_odd,k);
 f_peak_pre_odd = mean(f(idx_temp),1);
-[~,idx_temp] = maxk(PSD_pretest(:,idx_even),k);
+[~,idx_temp] = maxk(PSD_pretest_even,k);
 f_peak_pre_even = mean(f(idx_temp),1);
 
 mean(f_peak_post_even)

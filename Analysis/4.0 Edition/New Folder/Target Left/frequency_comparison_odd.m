@@ -65,9 +65,9 @@ for j = 1 :subs
     end
     [~,idx_pre_odd] = maxk(nanmean(PSD_pretest_odd,2),k);
     [~,idx_post_odd] = maxk(nanmean(PSD_posttest_odd,2),k);
-    f_pre_odd = mean(f(idx_pre_odd));
-    f_post_odd = mean(f(idx_post_odd));
-    f_diff(j) = f_post_odd - f_pre_odd;
+    f_pre_odd(j) = mean(f(idx_pre_odd));
+    f_post_odd(j) = mean(f(idx_post_odd));
+    f_diff(j) = f_post_odd(j) - f_pre_odd(j);
 end
 SE_jack = sqrt(sum((f_diff-mean(f_diff)).^2)/length(f_diff)*(length(f_diff)-1));
 T = mean(f_diff)/SE_jack;

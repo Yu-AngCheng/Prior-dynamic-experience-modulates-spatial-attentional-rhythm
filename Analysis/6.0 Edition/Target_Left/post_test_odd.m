@@ -14,6 +14,11 @@ detrendnumber = 1; % if 1, remove the linear trend
 
 f = (0:N/2)*fs/N;
 t = ((1:24)/fs)'+shift;
+
+color1 = [0.8290 0.5 0.1];
+color2 = [0.90,0.33,0.33];
+color3 = [0.20,0.20,0.80];
+color0 = [0.50,0.50,0.50];
 %%
 for sub = 1:size(width_posttest, 3)
     posttest_sub = squeeze(width_posttest(:,:,sub));
@@ -80,11 +85,17 @@ sig_post_odd(h_post_odd) = max(PSD_mean_post_odd).*1.5;
 %%
 figure(1)
 subplot(3,2,5)
-shadedErrorBar(f',PSD_mean_post_odd,nanstd(PSD_post_odd,[],2)/sqrt(subs));
-hold on; plot(f,sig_post_odd,'r-','LineWidth',2.5);
+shadedErrorBar(f',PSD_mean_post_odd,nanstd(PSD_post_odd,[],2)/sqrt(subs),'lineprops',{'color',color2});
+hold on; plot(f,sig_post_odd,'-','LineWidth',2.5,'color',color2);
 xlabel('Frequency (Hz)'); ylabel('PSD (a.u.)'); title('3Hz prime');
 subplot(3,2,6)
-shadedErrorBar(t,-mean(ACC_post_odd,2),nanstd(ACC_post_odd,[],2)/sqrt(subs));
+shadedErrorBar(t,-mean(ACC_post_odd,2),nanstd(ACC_post_odd,[],2)/sqrt(subs),'lineprops',{'color',color2});
+xlim([0.2,1.05])
+xlabel('SOA (s)'); ylabel('Accuracy (C-IC)'); title('3Hz prime')
+%%
+subplot(3,2,5);hold on;
+text(1.9,0.013,'**','FontWeight','bold','HorizontalAlignment','center');
+ylim([0,0.014])
 %%
 for iRun = 1:100
     fo = fitoptions('Method','NonlinearLeastSquares',...
@@ -98,8 +109,7 @@ for iRun = 1:100
 end
 [~, idx_opt] = max(rsquare_temp);fitObj = fitObj_tmp{idx_opt};
 c = fitObj.c; a = fitObj.a; ff = fitObj.f; phi = fitObj.phi;
-hold on; plot(t,c+a*sin(2*pi*ff*t+phi),'r-','LineWidth',1);
-xlim([0.2,1.05])
-xlabel('SOA (s)'); ylabel('Accuracy (C-IC)'); title('3Hz prime')
+subplot(3,2,6);hold on; 
+plot(linspace(t(1),t(end)),c+a*sin(2*pi*ff*linspace(t(1),t(end))+phi),'-','LineWidth',2,'Color',color0);
 %%
-save PSD.mat PSD_post_odd -append;
+% save PSD.mat PSD_post_odd -append;

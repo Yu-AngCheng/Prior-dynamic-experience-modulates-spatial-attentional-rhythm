@@ -14,6 +14,11 @@ detrendnumber = 1; % if 1, remove the linear trend
 
 f = (0:N/2)*fs/N;
 t = ((1:24)/fs)'+shift;
+
+color1 = [0.8290 0.5 0.1];
+color2 = [0.90,0.33,0.33];
+color3 = [0.20,0.20,0.80];
+color0 = [0.50,0.50,0.50];
 %%
 for sub = 1:size(width_posttest, 3)
     posttest_sub = squeeze(width_posttest(:,:,sub));
@@ -74,16 +79,22 @@ criterion = max(PSD_shuffle_mean(:,round(runs*(1-alpha))));
 h_post_even = PSD_mean_post_even > criterion;
 fprintf('Out of %d tests, %d is significant.\n',length(h_post_even),sum(h_post_even));
 sig_post_even = NaN(size(h_post_even));
-sig_post_even(h_post_even) = max(PSD_mean_post_even).*2;
+sig_post_even(h_post_even) = max(PSD_mean_post_even).*1.8;
 %%
 figure(1)
 subplot(3,2,3); % the frequency domain
-shadedErrorBar(f',PSD_mean_post_even,nanstd(PSD_post_even,[],2)/sqrt(subs));
+shadedErrorBar(f',PSD_mean_post_even,nanstd(PSD_post_even,[],2)/sqrt(subs),'lineprops',{'color',color3});
 hold on;
-plot(f,sig_post_even,'r-','LineWidth',2.5);
+plot(f,sig_post_even,'-','LineWidth',2.5,'Color',color3);
 xlabel('Frequency (Hz)'); ylabel('PSD (a.u.)'); title('5Hz prime group')
 subplot(3,2,4) % the time domain
-shadedErrorBar(t,-mean(ACC_post_even,2),nanstd(ACC_post_even,[],2)/sqrt(subs));
+shadedErrorBar(t,-mean(ACC_post_even,2),nanstd(ACC_post_even,[],2)/sqrt(subs),'lineprops',{'color',color3});
+xlim([0.2,1.05]);
+xlabel('SOA (s)'); ylabel('Accuracy (C-IC)'); title('5Hz prime group')
+%%
+subplot(3,2,3);hold on;
+text(4.2,0.011,'**','FontWeight','bold','HorizontalAlignment','center');
+ylim([0,0.012])
 %%
 for iRun = 1:100
     fo = fitoptions('Method','NonlinearLeastSquares',...
@@ -97,8 +108,7 @@ for iRun = 1:100
 end
 [~, idx_opt] = max(rsquare_temp);fitObj = fitObj_tmp{idx_opt};
 c = fitObj.c; a = fitObj.a; ff = fitObj.f; phi = fitObj.phi;
-hold on; plot(t,c+a*sin(2*pi*ff*t+phi),'r-','LineWidth',1);
-xlim([0.2,1.05]);
-xlabel('SOA (s)'); ylabel('Accuracy (C-IC)'); title('5Hz prime group')
+subplot(3,2,4);hold on;
+plot(linspace(t(1),t(end)),c+a*sin(2*pi*ff*linspace(t(1),t(end))+phi),'-','LineWidth',2,'Color',color0);
 %%
-save PSD.mat PSD_post_even -append;
+% save PSD.mat PSD_post_even -append;

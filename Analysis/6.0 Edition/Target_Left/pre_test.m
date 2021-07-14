@@ -103,4 +103,4 @@ c = fitObj.c; a = fitObj.a; ff = fitObj.f; phi = fitObj.phi;
 subplot(3,2,2);hold on;
 plot(t,c+a*sin(2*pi*ff*t+phi),'r-','LineWidth',1);
 %%
-% save PSD.mat PSD_pretest f;
+save PSD.mat PSD_pretest f;

@@ -94,7 +94,7 @@ SEM(:,3) = nanstd(M_Y,[],2)./sqrt(size(M_Y,2));
 %%
 h = figure(127);
 set(h,'Position',[276,105,848,498])
-subplot(1,2,1)
+subplot(2,1,1)
 bar1 = barwitherr(SEM([1,3],:),ACC([1,3],:),'EdgeColor','none');
 set(bar1(1),'FaceColor',color1);
 set(bar1(2),'FaceColor',color2);
@@ -102,7 +102,7 @@ set(bar1(3),'FaceColor',color3);
 xticks([1,2]); xticklabels({'Incongruent Trials','Congruent Trials'})
 ylim([0,1.3]); ylabel('Accuracy');yticks(0:0.2:1);
 title('Target Left');box off;
-subplot(1,2,2)
+subplot(2,1,2)
 bar2 = barwitherr(SEM([2,4],:),ACC([2,4],:),'EdgeColor','none');
 set(bar2(1),'FaceColor',color1);
 set(bar2(2),'FaceColor',color2);
@@ -112,14 +112,14 @@ ylim([0,1.3]); ylabel('Accuracy');yticks(0:0.2:1);
 title('Target Right');box off;
 %%
 figure(127)
-subplot(1,2,1);hold on;
+subplot(2,1,1);hold on;
 line([1,2],[1,1],'Color','k');
 line([bar1(1).XEndPoints;bar1(3).XEndPoints],[0.90,0.90;0.90,0.90],'Color','k')
 text(1.5,1.02,'**','FontWeight','bold','HorizontalAlignment','center');
 text(1,0.92,'*','FontWeight','bold','HorizontalAlignment','center');
 text(2,0.92,'*','FontWeight','bold','HorizontalAlignment','center');
 legend(bar1,{'baseline','3Hz prime','5Hz prime'});legend boxoff;
-subplot(1,2,2); hold on;
+subplot(2,1,2); hold on;
 line([1,2],[1,1],'Color','k');
 line([bar2(1).XEndPoints;bar2(3).XEndPoints],[0.90,0.90;0.90,0.90],'Color','k')
 text(1.5,1.02,'**','FontWeight','bold','HorizontalAlignment','center');

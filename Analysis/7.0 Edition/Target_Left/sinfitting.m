@@ -1,0 +1,19 @@
+function [rsquare,fitObj] = sinfitting(x,y,f)
+x = f*x;
+for iRun = 1:1
+    fo = fitoptions('Method','NonlinearLeastSquares',...
+        'Lower', [0, 0, 0],...
+        'Upper', [1, 1, 2*pi],...
+        'StartPoint', [rand(), rand(), 2*pi*rand()]);
+    ft = fittype('c+a*sin(2*pi*x+phi)', 'options', fo,...
+        'independent', 'x','dependent','y');
+%     fo = fitoptions('Method','LinearLeastSquares',...
+%         'Lower', [0, -1, -1],...
+%         'Upper', [1,  1, 1]);
+%     ft = fittype({'1','sin(x)','cos(x)'},'coefficients',{'c','a','b'},'options',fo);
+    [fitObj_tmp{iRun}, gof] = fit(x, y, ft);
+    rsquare_temp(iRun) = gof.rsquare;
+end
+[rsquare, idx_opt] = max(rsquare_temp);fitObj = fitObj_tmp{idx_opt};
+end
+

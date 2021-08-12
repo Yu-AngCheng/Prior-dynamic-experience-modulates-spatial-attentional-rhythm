@@ -1,4 +1,17 @@
+### Prior dynamic experience modulates spatial attentional rhythm
+
+**Yu-Ang Cheng1, Huan Luo1,2,3, ***
+
+1    School of Psychological and Cognitive Sciences, Peking University, China. 
+
+2    PKU-IDG/McGovern Institute for Brain Research, Peking University, China
+
+3    Beijing Key Laboratory of Behavior and Mental Health, Peking University, China
+
+ 
+
 **ABSTRACT**
 
-The brain efficiently directs its limited resources over multiple objects through a mechanism called attention. Recent studies show that attention works in a temporally dynamic way, where resources are allocated rhythmically upon multiple objects. However, little is known about its flexibility, whether the rhythm is hardwired inherently or can adapt to different task demands. Here we used human behavioral data to investigate this characteristic. We presented a rhythmic stimulus alternating between two locations before asking participants (N = 25) to detect a target between these two locations. We successfully verified that before the priming stimulus, detection performance, reflecting the spatial attention frequency, fluctuates rhythmically at ~2.5Hz. More importantly, this rhythm will be impacted by the temporal dynamics of the priming stimulus. The spatial attention frequency is ~4.5Hz among people exposed to a 5Hz prime stimulus, while it is still ~2.5Hz among those exposed to a 3Hz prime stimulus. Yet, the spatial attention frequencies of these two groups of people do not differ before exposure to the rhythmic stimulus. Therefore, these findings suggest that visual spatial attention is a highly adaptive system, which automatically organizes itself to adapt to the temporal dynamics of external stimuli, so as to process external information at an appropriate time scale.
+The brain efficiently coordinates its limited resources over external information through attention. Recent studies demonstrate that attention works in a dynamic way, whereby multiple locations, objects, and features are rhythmically sampled over time. However, it remains largely unknown whether attentional rhythm is inherently hardwired or can adapt to prior experience and changes flexibly. Here we used time-resolved behavioral measurements on 25 human subjects to examine whether externally induced rhythm in prior experience would influence spatial attentional rhythm. Specifically, subjects were first exposed to a rhythmic prime display (rhythmic prime), i.e., a near-threshold stimulus was presented alternatively between two spatial locations for 2500 ms at 3 Hz or 5 Hz. Next, after a varied time interval (200 to 1000 ms in steps of 33 ms), a near-threshold probe appeared at one of the two locations and subjects needed to detect the target and the accuracies were measured. First, behavioral data shows 2.5 Hz attentional rhythm when there is no prior stimulus, largely consistent with previous findings. Most importantly, the attentional rhythm is modulated by the temporal characteristics of prime stimulation, i.e., increasing to 4.5 Hz for 5 Hz prime and remaining at 2.5 Hz for 3 Hz prime, when the probe was presented in the left visual field. Taken together, our results suggest that visual attentional rhythm is not a fixed clock and could be modulated by and adapt to prior dynamic experience. 
 
+ 

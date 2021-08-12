@@ -8,7 +8,7 @@ N = 64; % NFFT
 subs = 14; % number of subjects
 shift = 0.2; % time lag
 
-alpha = 0.01; % the significance level
+alpha = 0.001; % the significance level
 gaussianwindow = 3;% the length of gaussian moving window 
 detrendnumber = 1; % if 1, remove the linear trend
 
@@ -46,7 +46,7 @@ for sub = 1:size(width_posttest, 3)
     C_IC_Y = M_Y(1:length(M_Y)/2) - M_Y(length(M_Y)/2+1:end);
     C_IC_Y = smoothdata(C_IC_Y,'gaussian',gaussianwindow);
     
-    ACC_post_even(:,sub) = detrend(C_IC_Y,detrendnumber);
+    ACC_post_even(:,sub) = C_IC_Y;
     PSD_post_even(:,sub) = periodogram(detrend(C_IC_Y,detrendnumber),[],N,fs);
 end
 
@@ -80,56 +80,56 @@ criterion = max(PSD_shuffle_mean(:,round(runs*(1-alpha))));
 h_post_even = PSD_mean_post_even > criterion;
 fprintf('Out of %d tests, %d is significant.\n',length(h_post_even),sum(h_post_even));
 sig_post_even = NaN(size(h_post_even));
-sig_post_even(h_post_even) = max(PSD_mean_post_even).*1.8;
+sig_post_even(h_post_even) = max(PSD_mean_post_even).*1.5;
 %%
 figure(1)
 subplot(3,2,3); % the frequency domain
 shadedErrorBar(f',PSD_mean_post_even,nanstd(PSD_post_even,[],2)/sqrt(subs),'lineprops',{'color',color3});
 hold on;
 plot(f,sig_post_even,'-','LineWidth',2.5,'Color',color3);
-xlabel('Frequency (Hz)'); ylabel('PSD (a.u.)'); title('5Hz prime group')
+xlabel('Frequency (Hz)'); ylabel('PSD (a.u.)'); title('5Hz prime')
 subplot(3,2,4) % the time domain
 shadedErrorBar(t,-mean(ACC_post_even,2),nanstd(ACC_post_even,[],2)/sqrt(subs),'lineprops',{'color',color3});
 xlim([0.2,1.05]);
-xlabel('SOA (s)'); ylabel('Accuracy (C-IC)'); title('5Hz prime group')
+xlabel('SOA (s)'); ylabel('Accuracy (C-IC)'); title('5Hz prime')
 %%
 subplot(3,2,3);hold on;
-text(4.2,0.011,'**','FontWeight','bold','HorizontalAlignment','center');
+text(3.6,0.011,'***','FontWeight','bold','HorizontalAlignment','center');
 ylim([0,0.012])
 %%
-for sub = 1:subs
-    for iRun = 1:100
-         fo = fitoptions('Method','NonlinearLeastSquares',...
-                        'Lower', [0, 0, 0, 0],...
-                        'Upper', [1, 1, 10, 2*pi],...
-                        'StartPoint', [rand(), rand(), 10*rand(), 2*pi*rand()]);
-        ft = fittype('c+a*sin(2*pi*f*x+phi)', 'options', fo,...
-            'independent', 'x','dependent','y');
-        [fitObj_tmp{iRun}, gof] = fit(t, -ACC_post_even(:,sub), ft);
-        rsquare_temp(iRun) = gof.rsquare;
-    end
-[~, idx_opt] = max(rsquare_temp);fitObj = fitObj_tmp{idx_opt};
-c(sub) = fitObj.c; a(sub) = fitObj.a; ff(sub) = fitObj.f; phi(sub) = fitObj.phi;
-xx = linspace(t(1),t(end));
-model_prediction(:,sub) = c(sub)+a(sub)*sin(2*pi*ff(sub)*xx+phi(sub));
-end
-subplot(3,2,4);hold on;
-plot(xx,mean(model_prediction,2),'-','LineWidth',2,'Color',color0);
-%%
-% for iRun = 1:100
-%     fo = fitoptions('Method','NonlinearLeastSquares',...
-%                     'Lower', [0, 0, 0, 0],...
-%                     'Upper', [1, 1, 10, 2*pi],...
-%                     'StartPoint', [rand(), rand(), 10*rand(), 2*pi*rand()]);
-%     ft = fittype('c+a*sin(2*pi*f*x+phi)', 'options', fo,...
-%         'independent', 'x','dependent','y');
-%     [fitObj_tmp{iRun}, gof] = fit(t, -mean(ACC_post_even,2), ft);
-%     rsquare_temp(iRun) = gof.rsquare;
-% end
+% for sub = 1:subs
+%     for iRun = 1:100
+%          fo = fitoptions('Method','NonlinearLeastSquares',...
+%                         'Lower', [0, 0, 0, 0],...
+%                         'Upper', [1, 1, 10, 2*pi],...
+%                         'StartPoint', [rand(), rand(), 10*rand(), 2*pi*rand()]);
+%         ft = fittype('c+a*sin(2*pi*f*x+phi)', 'options', fo,...
+%             'independent', 'x','dependent','y');
+%         [fitObj_tmp{iRun}, gof] = fit(t, -ACC_post_even(:,sub), ft);
+%         rsquare_temp(iRun) = gof.rsquare;
+%     end
 % [~, idx_opt] = max(rsquare_temp);fitObj = fitObj_tmp{idx_opt};
-% c = fitObj.c; a = fitObj.a; ff = fitObj.f; phi = fitObj.phi;
+% c(sub) = fitObj.c; a(sub) = fitObj.a; ff(sub) = fitObj.f; phi(sub) = fitObj.phi;
+% xx = linspace(t(1),t(end));
+% model_prediction(:,sub) = c(sub)+a(sub)*sin(2*pi*ff(sub)*xx+phi(sub));
+% end
 % subplot(3,2,4);hold on;
-% plot(linspace(t(1),t(end)),c+a*sin(2*pi*ff*linspace(t(1),t(end))+phi),'-','LineWidth',2,'Color',color0);
+% plot(xx,mean(model_prediction,2),'-','LineWidth',2,'Color',color0);
+%%
+for iRun = 1:100
+    fo = fitoptions('Method','NonlinearLeastSquares',...
+                    'Lower', [0, 0, 0, 0],...
+                    'Upper', [1, 1, 10, 2*pi],...
+                    'StartPoint', [rand(), rand(), 10*rand(), 2*pi*rand()]);
+    ft = fittype('c+a*sin(2*pi*f*x+phi)', 'options', fo,...
+        'independent', 'x','dependent','y');
+    [fitObj_tmp{iRun}, gof] = fit(t, -mean(ACC_post_even,2), ft);
+    rsquare_temp(iRun) = gof.rsquare;
+end
+[~, idx_opt] = max(rsquare_temp);fitObj = fitObj_tmp{idx_opt};
+c = fitObj.c; a = fitObj.a; ff = fitObj.f; phi = fitObj.phi;
+subplot(3,2,4);hold on;
+plot(linspace(t(1),t(end)),c+a*sin(2*pi*ff*linspace(t(1),t(end))+phi),'-','LineWidth',2,'Color',color0);
 %%
 % save PSD.mat PSD_post_even -append;
 % save post_test_even_results.mat

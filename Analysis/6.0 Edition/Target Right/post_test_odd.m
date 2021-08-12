@@ -46,7 +46,7 @@ for sub = 1:size(width_posttest, 3)
     C_IC_Y = M_Y(1:length(M_Y)/2) - M_Y(length(M_Y)/2+1:end);
     C_IC_Y = smoothdata(C_IC_Y,'gaussian',gaussianwindow);
     
-    ACC_post_odd(:,sub) = detrend(C_IC_Y,detrendnumber);
+    ACC_post_odd(:,sub) = C_IC_Y;
     PSD_post_odd(:,sub) = periodogram(detrend(C_IC_Y,detrendnumber),[],N,fs);
 end
 
@@ -94,42 +94,42 @@ xlim([0.2,1.05])
 xlabel('SOA (s)'); ylabel('Accuracy (C-IC)'); title('3Hz prime')
 %%
 subplot(3,2,5);hold on;
-text(1.9,0.013,'**','FontWeight','bold','HorizontalAlignment','center');
-ylim([0,0.014])
+text(5.2,0.011,'**','FontWeight','bold','HorizontalAlignment','center');
+ylim([0,0.012])
 %%
-for sub = 1:subs
-    for iRun = 1:100
-         fo = fitoptions('Method','NonlinearLeastSquares',...
-                        'Lower', [0, 0, 0, 0],...
-                        'Upper', [1, 1, 10, 2*pi],...
-                        'StartPoint', [rand(), rand(), 10*rand(), 2*pi*rand()]);
-        ft = fittype('c+a*sin(2*pi*f*x+phi)', 'options', fo,...
-            'independent', 'x','dependent','y');
-        [fitObj_tmp{iRun}, gof] = fit(t, -ACC_post_odd(:,sub), ft);
-        rsquare_temp(iRun) = gof.rsquare;
-    end
-[~, idx_opt] = max(rsquare_temp);fitObj = fitObj_tmp{idx_opt};
-c(sub) = fitObj.c; a(sub) = fitObj.a; ff(sub) = fitObj.f; phi(sub) = fitObj.phi;
-xx = linspace(t(1),t(end));
-model_prediction(:,sub) = c(sub)+a(sub)*sin(2*pi*ff(sub)*xx+phi(sub));
-end
-subplot(3,2,6);hold on;
-plot(xx,mean(model_prediction,2),'-','LineWidth',2,'Color',color0);
-%%
-% for iRun = 1:100
-%     fo = fitoptions('Method','NonlinearLeastSquares',...
-%                     'Lower', [0, 0, 0, 0],...
-%                     'Upper', [1, 1, 10, 2*pi],...
-%                     'StartPoint', [rand(), rand(), 10*rand(), 2*pi*rand()]);
-%     ft = fittype('c+a*sin(2*pi*f*x+phi)', 'options', fo,...
-%         'independent', 'x','dependent','y');
-%     [fitObj_tmp{iRun}, gof] = fit(t, -mean(ACC_post_odd,2), ft);
-%     rsquare_temp(iRun) = gof.rsquare;
-% end
+% for sub = 1:subs
+%     for iRun = 1:100
+%          fo = fitoptions('Method','NonlinearLeastSquares',...
+%                         'Lower', [0, 0, 0, 0],...
+%                         'Upper', [1, 1, 10, 2*pi],...
+%                         'StartPoint', [rand(), rand(), 10*rand(), 2*pi*rand()]);
+%         ft = fittype('c+a*sin(2*pi*f*x+phi)', 'options', fo,...
+%             'independent', 'x','dependent','y');
+%         [fitObj_tmp{iRun}, gof] = fit(t, -ACC_post_odd(:,sub), ft);
+%         rsquare_temp(iRun) = gof.rsquare;
+%     end
 % [~, idx_opt] = max(rsquare_temp);fitObj = fitObj_tmp{idx_opt};
-% c = fitObj.c; a = fitObj.a; ff = fitObj.f; phi = fitObj.phi;
-% subplot(3,2,6);hold on; 
-% plot(linspace(t(1),t(end)),c+a*sin(2*pi*ff*linspace(t(1),t(end))+phi),'-','LineWidth',2,'Color',color0);
+% c(sub) = fitObj.c; a(sub) = fitObj.a; ff(sub) = fitObj.f; phi(sub) = fitObj.phi;
+% xx = linspace(t(1),t(end));
+% model_prediction(:,sub) = c(sub)+a(sub)*sin(2*pi*ff(sub)*xx+phi(sub));
+% end
+% subplot(3,2,6);hold on;
+% plot(xx,mean(model_prediction,2),'-','LineWidth',2,'Color',color0);
+%%
+for iRun = 1:100
+    fo = fitoptions('Method','NonlinearLeastSquares',...
+                    'Lower', [0, 0, 0, 0],...
+                    'Upper', [1, 1, 10, 2*pi],...
+                    'StartPoint', [rand(), rand(), 10*rand(), 2*pi*rand()]);
+    ft = fittype('c+a*sin(2*pi*f*x+phi)', 'options', fo,...
+        'independent', 'x','dependent','y');
+    [fitObj_tmp{iRun}, gof] = fit(t, -mean(ACC_post_odd,2), ft);
+    rsquare_temp(iRun) = gof.rsquare;
+end
+[~, idx_opt] = max(rsquare_temp);fitObj = fitObj_tmp{idx_opt};
+c = fitObj.c; a = fitObj.a; ff = fitObj.f; phi = fitObj.phi;
+subplot(3,2,6);hold on; 
+plot(linspace(t(1),t(end)),c+a*sin(2*pi*ff*linspace(t(1),t(end))+phi),'-','LineWidth',2,'Color',color0);
 %%
 % save PSD.mat PSD_post_odd -append;
 % save post_test_odd_results.mat

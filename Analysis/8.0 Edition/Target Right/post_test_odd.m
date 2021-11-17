@@ -131,5 +131,5 @@ c = fitObj.c; a = fitObj.a; ff = fitObj.f; phi = fitObj.phi;
 subplot(3,2,6);hold on; 
 plot(linspace(t(1),t(end)),c+a*sin(2*pi*ff*linspace(t(1),t(end))+phi),'-','LineWidth',2,'Color',color0);
 %%
-% save PSD.mat PSD_post_odd -append;
-% save post_test_odd_results.mat
+save PSD.mat PSD_post_odd -append;
+save post_test_odd_results.mat
